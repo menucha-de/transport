@@ -1,0 +1,152 @@
+openapi: "3.0.0"
+info:
+  title: GPIO
+  version: 1.0.0
+components:
+  schemas:
+
+    Property:
+         type: object
+         properties:
+            name:
+               type: string
+               description: Unique name of the property.
+            value:
+               type: string
+               description: The value of the property.
+                  
+    Subscriptor:
+         type: object
+         properties:
+            id:
+               type: string
+            enable:
+               type: boolean
+            name:
+               type: string
+            path:
+               type: string
+            subscriberId:
+               type: string
+            properties:
+               type: object
+               additionalProperties:
+                  type: string
+                  
+    Subscriber:
+      type: object
+      properties:
+        id:
+            type: string
+            description: Unique identifier (UUID) of this subscriber.
+        uri:
+            type: string
+            description: The URI of the subscriber. Value MUST be in the form of an absolute URI.
+        properties:
+            type: array
+            description: A list of connection properties for the subscriber.
+            items:
+              $ref: '#/components/schemas/Property'
+        enable:
+            type: boolean
+            description: Defines wether the subscriber is active or not.
+                  
+paths:
+
+  /subscribers:
+      get:
+         tags:
+         - Subscribers
+         summary: Returns a list of all defined subscribers
+         responses:
+            '200':
+               description: Subscribers returned.
+               content:
+                  application/json:
+                     schema:
+                        type: array
+                        items:
+                           $ref: '#/components/schemas/Subscriber'
+            '500':
+               description: Unexpected error occured
+      post:
+         tags:
+         - Subscribers
+         summary: Creates a subscriber and returns its generated ID
+         operationId: createSubscriber
+         requestBody:
+            content:
+               application/json:
+                  schema:
+                     $ref: '#/components/schemas/Subscriber'
+         responses:
+            '200':
+               description: Subscriber created, UUID generated and returned
+               content:
+                  text/plain:
+                     schema:
+                        type: string
+            '415':
+               description: Unsupported Media Type
+            '422':
+               description: Empty content not allowed
+            '500':
+               description: Unexpected error occured
+               
+  /subscribers/{subscriberId}:
+      summary: All operations in this path will be applied to a particular subscriber defined by its ID
+      parameters:
+      -  name: subscriberId
+         schema:
+            type: string
+         in: path
+         required: true
+         description: ID of the subscriber to operate on
+         example: 8eca814e-5c64-4408-b538-b7468b15acd7
+      get:
+         tags:
+         - Subscribers
+         summary: Returns the requested subscriber
+         operationId: getSubscriber
+         responses:
+            '200':
+               description: Subscriber returned
+               content:
+                  application/json:
+                     schema:
+                        $ref: '#/components/schemas/Subscriber'
+            '404':
+               description: Subscriber not found
+            '500':
+               description: Unexpected error occured
+      put:
+         tags:
+         - Subscribers
+         summary: Updates the requested subscriber
+         operationId: updateSubscriber
+         requestBody:
+            content:
+               application/json:
+                  schema:
+                     $ref: '#/components/schemas/Subscriber'
+         responses:
+            '204':
+               description: Subscriber updated
+            '404':
+               description: Subscriber not found
+            '415':
+               description: Unsupported Media Type
+            '422':
+               description: Empty content not allowed
+            '500':
+               description: Unexpected error occured
+      delete:
+         tags:
+         - Subscribers
+         summary: Deletes the requested subscriber
+         operationId: deleteSubscriber
+         responses:
+            '204':
+               description: Subscriber deleted
+            '500':
+               description: Unexpected error occured
