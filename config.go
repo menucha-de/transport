@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"os"
 
-	loglib "github.com/peramic/logging"
+	loglib "github.com/menucha-de/logging"
 )
 
 const filename = "./conf/transport/subscribers.json"

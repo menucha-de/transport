@@ -19,7 +19,7 @@ import (
 	"software.sslmate.com/src/go-pkcs12"
 
 	guuid "github.com/google/uuid"
-	utils "github.com/peramic/utils"
+	"github.com/menucha-de/utils"
 )
 
 const certFolder = "./conf/transport/certs"

@@ -5,7 +5,7 @@ import (
 	"crypto/x509"
 	"io/ioutil"
 
-	utils "github.com/peramic/utils"
+	"github.com/menucha-de/utils"
 )
 
 func newTLSConfig(dir string) *tls.Config {
